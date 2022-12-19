@@ -14,16 +14,20 @@ class Monkey:
             num = int(self.operation[1])
         except:
             num = self.items[item_id]
+
         if self.operation[0] == '*':
             self.items[item_id] *= num
         else:
             self.items[item_id] += num
         
-        # divide by 3 and round down
-        self.items[item_id] = floor(self.items[item_id] / 3)
+        # PART 1: divide by 3 and round down
+        #self.items[item_id] = floor(self.items[item_id] / 3)
+
+        # PART 2
+        self.items[item_id] %= 9699690
         
         # run test, return id of monkey to throw to
-        if self.items[item_id] % self.test[0]:
+        if self.items[item_id] % self.test[0] == 0:
             return self.test[1]
         return self.test[2]
 
@@ -43,15 +47,15 @@ for m in monkey_input:
     monkeys.append(Monkey(items, operation, test))
 
 items_inspected = []
-# play game for 20 rounds
-for i in range(20):
+# play game for 20 rounds (PART 1) or 10,000 rounds (PART 2)
+for i in range(10000):
     for monkey in monkeys:
         # inspect and throw all items
         for k in range(len(monkey.items)):
             next_monkey = monkey.inspect_item(k)
             monkeys[next_monkey].items.append(monkey.items[k])
         monkey.items.clear()
-        if i == 19: # last round
+        if i == 10000-1: # last round
             items_inspected.append(monkey.items_inspected)
 
 # find 2 monkeys who inspected the most items and multiply them
