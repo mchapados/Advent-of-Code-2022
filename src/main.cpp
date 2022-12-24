@@ -6,11 +6,10 @@
 
 #include <cstdint>
 #include <iostream>
-#include "day10.cpp"
+#include "day12.cpp"
 
 
 int main(void) {
-    std::cout << day10_pt2() << '\n';
-
+    std::cout << day12() << '\n';
     return EXIT_SUCCESS;
 }
