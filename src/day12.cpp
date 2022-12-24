@@ -1,6 +1,7 @@
 #include <cstddef>
 #include <fstream>
 #include <string>
+#include <type_traits>
 #include <vector>
 #include <algorithm>
 #include <deque>
@@ -37,7 +38,6 @@ struct Position {
 
 class Heightmap {
     public:
-        Position start, end;
         Heightmap(std::string filepath) {
             // open input file
             std::fstream input_file;
@@ -58,10 +58,14 @@ class Heightmap {
                     if (map[i][j] == 'S') {
                         start = {i, j};
                         map[i][j] = 'a';
+                        starts.emplace(start);
                     }
                     else if (map[i][j] == 'E') {
                         end = {i, j};
                         map[i][j] = 'z';
+                    }
+                    else if (map[i][j] == 'a') {
+                        starts.emplace(Position{i, j});
                     }
                 }
             }
@@ -113,11 +117,25 @@ class Heightmap {
             }
             return 2147483647; // no possible path
         }
+
+        int shortest_path_pt2() {
+            int result = 2147483647, steps;
+            // find shortest path from each potential starting position
+            for (auto s : starts) {
+                start = s;
+                steps = shortest_path();
+                if (steps < result)
+                    result = steps;
+            }
+            return result; // return shortest possible path
+        }
     private:
         std::vector<std::vector<char>> map;
+        Position start, end;
+        std::set<Position> starts; // potential starts for pt 2
 };
 
 int day12() {
     Heightmap heightmap("../input_files/day12_input.txt");  
-    return heightmap.shortest_path();
+    return heightmap.shortest_path_pt2();
 }
